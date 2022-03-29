@@ -11,3 +11,15 @@ services:
       - ./docker-services/organizr/config:/config
     environment:
       - TZ=Europe/London
+
+  monitorr:
+    container_name: monitorr
+    hostname: monitorr
+    image: monitorr/monitorr:latest
+    restart: unless-stopped
+    ports:
+      - 9000:80
+    volumes:
+      - ./docker-services/monitorr/app:/app
+    environment:
+      - TZ=Europe/London
