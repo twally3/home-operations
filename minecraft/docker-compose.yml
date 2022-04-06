@@ -18,3 +18,45 @@ services:
     volumes:
       - ./docker-services/minecraft/data:/data:cached
 
+  # backup:
+  #   container_name: backup
+  #   hostname: backup
+  #   image: itzg/mc-backup
+  #   restart: unless-stopped    
+  #   environment:
+  #     BACKUP_INTERVAL: "30m"
+  #     RCON_HOST: minecraft
+  #     PAUSE_IF_NO_PLAYERS: true
+  #     EXCLUDES: "*.jar,cache,logs"
+  #     TZ: "Europe/London"
+  #   volumes:
+  #     - ./docker-services/minecraft/data:/data:ro
+  #     - ./docker-services/backup/backups:/backups
+
+  restic:
+    container_name: restic
+    hostname: restic
+    image: itzg/mc-backup
+    restart: unless-stopped    
+    environment:
+      BACKUP_INTERVAL: "30m"
+      RCON_HOST: minecraft
+      PAUSE_IF_NO_PLAYERS: true
+      EXCLUDES: "*.jar,cache,logs"
+
+      BACKUP_METHOD: restic
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
+      # RESTIC_JOB_ARGS: "--option s3.storage-class=ONEZONE_IA"
+      # RESTIC_REPOSITORY: /mnt/restic
+      PRUNE_RESTIC_RETENTION: "--keep-last 2 --keep-hourly 24 --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75"
+
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+
+      TZ: "Europe/London"
+    volumes:
+      - ./docker-services/minecraft/data:/data:ro
+      - ./docker-services/restic/backups:/backups
+      - ./docker-services/restic/restic:/mnt/restic
+
