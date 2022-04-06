@@ -1,8 +1,4 @@
 version: "3.6"
-
-volumes:
-  code:
-
 services:
   minecraft:
     container_name: minecraft
@@ -17,23 +13,8 @@ services:
       VERSION: "1.18.2"
       TYPE: "VANILLA"
       MEMORY: "2G"
-    tty: true
+    # tty: true
     stdin_open: true
     volumes:
-      - code:/data
-      # - ./docker-services/minecraft/data:/data:cached
+      - ./docker-services/minecraft/data:/data:cached
 
-x-mutagen:
-  sync:
-    defaults:
-      ignore:
-        vcs: true
-    code:
-      alpha: "./docker-services/minecraft/data"
-      beta: "volume://code"
-      mode: "two-way-resolved"
-      ignore:
-        paths:
-          - libraries
-          - logs
-          - versions
