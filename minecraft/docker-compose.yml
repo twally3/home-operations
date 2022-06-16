@@ -10,7 +10,7 @@ services:
     environment:
       EULA: "TRUE"
       TZ: "Europe/London"
-      VERSION: "1.18.2"
+      VERSION: "1.19"
       TYPE: "VANILLA"
       MEMORY: "2G"
     # tty: true
