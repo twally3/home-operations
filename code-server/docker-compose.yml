@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+    environment:
+      DOCKER_USER: "${USER}"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./code-server/.config:/home/coder/.config
+      - ./code-server/projects:/home/coder/projects
+      - ./code-server/settings.json:/home/coder/.local/share/code-server/User/settings.json
+
+networks:
+  default:
+    external: true
+    name: code-server
